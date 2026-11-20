@@ -1,0 +1,1887 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101116">
+<title>MIND//OS — From Lumo to Deep</title>
+
+<style>
+:root {
+  --bg:#101116;
+  --panel:#191a22;
+  --panel2:#20212b;
+  --border:#30313d;
+  --text:#e8e8ee;
+  --muted:#888997;
+  --blue:#8da8ff;
+  --purple:#b7a0ff;
+  --maroon:#9b526d;
+  --green:#8fd1a5;
+  --red:#ff8d91;
+}
+
+* {
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body {
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial, Helvetica, sans-serif;
+  min-height:100vh;
+}
+
+button,input,textarea,select {
+  font:inherit;
+}
+
+button {
+  cursor:pointer;
+  border:none;
+}
+
+.app {
+  display:flex;
+  min-height:100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+  width:240px;
+  background:#14151b;
+  border-right:1px solid var(--border);
+  padding:24px 16px;
+  display:flex;
+  flex-direction:column;
+  position:fixed;
+  height:100vh;
+}
+
+.logo {
+  padding:10px 12px 28px;
+}
+
+.logo h1 {
+  font-size:22px;
+  letter-spacing:3px;
+}
+
+.logo span {
+  color:var(--blue);
+}
+
+.logo p {
+  color:var(--muted);
+  font-size:11px;
+  margin-top:8px;
+  letter-spacing:1px;
+}
+
+.nav {
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+}
+
+.nav button {
+  text-align:left;
+  color:var(--muted);
+  background:transparent;
+  padding:13px 14px;
+  border-radius:10px;
+  transition:.2s;
+}
+
+.nav button:hover,
+.nav button.active {
+  background:var(--panel2);
+  color:var(--text);
+}
+
+.nav button.active {
+  border-left:3px solid var(--blue);
+}
+
+.sidebar-bottom {
+  margin-top:auto;
+  color:var(--muted);
+  font-size:11px;
+  padding:12px;
+  line-height:1.7;
+}
+
+/* MAIN */
+
+.main {
+  margin-left:240px;
+  width:calc(100% - 240px);
+  padding:30px;
+}
+
+.topbar {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:30px;
+  gap:20px;
+}
+
+.topbar h2 {
+  font-size:24px;
+  font-weight:500;
+}
+
+.topbar p {
+  color:var(--muted);
+  margin-top:7px;
+  font-size:13px;
+}
+
+.clock {
+  color:var(--blue);
+  font-size:13px;
+  text-align:right;
+}
+
+/* SECTIONS */
+
+.section {
+  display:none;
+}
+
+.section.active {
+  display:block;
+}
+
+.grid {
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  gap:16px;
+}
+
+.card {
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:20px;
+  min-width:0;
+}
+
+.card h3 {
+  font-size:15px;
+  margin-bottom:15px;
+  font-weight:500;
+}
+
+.card p {
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.7;
+}
+
+.span-3 {grid-column:span 3;}
+.span-4 {grid-column:span 4;}
+.span-6 {grid-column:span 6;}
+.span-8 {grid-column:span 8;}
+.span-12 {grid-column:span 12;}
+
+.stat {
+  font-size:30px;
+  font-weight:600;
+  margin:12px 0;
+}
+
+.stat-label {
+  color:var(--muted);
+  font-size:12px;
+}
+
+.badge {
+  display:inline-block;
+  font-size:11px;
+  padding:5px 9px;
+  border-radius:20px;
+  background:#282a35;
+  color:var(--blue);
+}
+
+.divider {
+  height:1px;
+  background:var(--border);
+  margin:16px 0;
+}
+
+.btn {
+  padding:10px 15px;
+  border-radius:9px;
+  background:var(--panel2);
+  border:1px solid var(--border);
+  color:var(--text);
+  font-size:12px;
+  transition:.2s;
+}
+
+.btn:hover {
+  border-color:var(--blue);
+}
+
+.btn-primary {
+  background:#5367a9;
+  border-color:#5367a9;
+  color:white;
+}
+
+.btn-danger {
+  color:var(--red);
+}
+
+.input {
+  width:100%;
+  background:#111218;
+  border:1px solid var(--border);
+  color:var(--text);
+  padding:11px;
+  border-radius:8px;
+  outline:none;
+  margin-bottom:10px;
+}
+
+.input:focus {
+  border-color:var(--blue);
+}
+
+textarea.input {
+  resize:vertical;
+  min-height:100px;
+}
+
+.row {
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+.row > * {
+  flex:1;
+}
+
+.progress {
+  height:7px;
+  background:#30313a;
+  border-radius:20px;
+  overflow:hidden;
+  margin:12px 0;
+}
+
+.progress-fill {
+  height:100%;
+  background:linear-gradient(90deg,var(--blue),var(--purple));
+  width:0%;
+  transition:.3s;
+}
+
+.item {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:12px 0;
+  border-bottom:1px solid var(--border);
+}
+
+.item:last-child {
+  border-bottom:none;
+}
+
+.item-text {
+  font-size:13px;
+  line-height:1.5;
+}
+
+.item.done .item-text {
+  text-decoration:line-through;
+  color:var(--muted);
+}
+
+.small {
+  font-size:11px;
+  color:var(--muted);
+}
+
+.empty {
+  color:var(--muted);
+  font-size:13px;
+  padding:20px 0;
+  text-align:center;
+}
+
+/* FOCUS */
+
+.timer {
+  font-size:65px;
+  font-weight:300;
+  text-align:center;
+  letter-spacing:4px;
+  padding:25px 0;
+}
+
+.timer-controls {
+  display:flex;
+  justify-content:center;
+  gap:10px;
+}
+
+.timer-mode {
+  text-align:center;
+  color:var(--blue);
+  font-size:12px;
+}
+
+/* MOOD */
+
+.moods {
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+}
+
+.mood {
+  background:var(--panel2);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:12px;
+  font-size:22px;
+  flex:1;
+}
+
+.mood.selected {
+  border-color:var(--blue);
+  background:#293047;
+}
+
+/* NOTES */
+
+.note {
+  background:var(--panel2);
+  border:1px solid var(--border);
+  padding:15px;
+  border-radius:10px;
+  margin-bottom:10px;
+}
+
+.note-title {
+  font-size:14px;
+  margin-bottom:8px;
+}
+
+.note-content {
+  color:var(--muted);
+  font-size:12px;
+  white-space:pre-wrap;
+  line-height:1.6;
+}
+
+/* GAME */
+
+.game-box {
+  background:#111218;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:20px;
+  text-align:center;
+  margin-top:15px;
+}
+
+.game-number {
+  font-size:40px;
+  padding:20px;
+}
+
+.game-grid {
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  max-width:320px;
+  margin:15px auto;
+}
+
+.game-cell {
+  aspect-ratio:1;
+  border-radius:8px;
+  background:var(--panel2);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:20px;
+  cursor:pointer;
+  border:1px solid var(--border);
+}
+
+.game-cell:hover {
+  border-color:var(--blue);
+}
+
+.game-cell.correct {
+  background:#294236;
+}
+
+.game-cell.wrong {
+  background:#493034;
+}
+
+.quiz-option {
+  display:block;
+  width:100%;
+  padding:12px;
+  background:var(--panel2);
+  border:1px solid var(--border);
+  color:var(--text);
+  border-radius:9px;
+  text-align:left;
+  margin:8px 0;
+}
+
+.quiz-option:hover {
+  border-color:var(--blue);
+}
+
+/* MOBILE */
+
+.mobile-nav {
+  display:none;
+}
+
+@media(max-width:900px) {
+  .sidebar {
+    width:200px;
+  }
+
+  .main {
+    margin-left:200px;
+    width:calc(100% - 200px);
+    padding:20px;
+  }
+
+  .span-3 {
+    grid-column:span 6;
+  }
+}
+
+@media(max-width:650px) {
+  .sidebar {
+    display:none;
+  }
+
+  .main {
+    margin:0;
+    width:100%;
+    padding:18px 15px 90px;
+  }
+
+  .span-3,
+  .span-4,
+  .span-6,
+  .span-8 {
+    grid-column:span 12;
+  }
+
+  .topbar {
+    align-items:flex-start;
+  }
+
+  .topbar h2 {
+    font-size:20px;
+  }
+
+  .clock {
+    font-size:11px;
+  }
+
+  .timer {
+    font-size:50px;
+  }
+
+  .mobile-nav {
+    display:flex;
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    background:#171820;
+    border-top:1px solid var(--border);
+    justify-content:space-around;
+    padding:10px 4px;
+    z-index:99;
+  }
+
+  .mobile-nav button {
+    background:transparent;
+    color:var(--muted);
+    font-size:10px;
+    padding:7px;
+  }
+
+  .mobile-nav button.active {
+    color:var(--blue);
+  }
+
+  .mobile-nav span {
+    display:block;
+    font-size:17px;
+    margin-bottom:4px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+<div class="logo">
+<h1>MIND<span>//</span>OS</h1>
+<p>FROM LUMO TO DEEP</p>
+</div>
+
+<nav class="nav">
+<button class="active" onclick="showPage('dashboard',this)">◈ Dashboard</button>
+<button onclick="showPage('focus',this)">◷ Focus Room</button>
+<button onclick="showPage('quests',this)">◇ Daily Quests</button>
+<button onclick="showPage('vault',this)">▣ Brain Vault</button>
+<button onclick="showPage('habits',this)">⌁ Habits</button>
+<button onclick="showPage('planner',this)">▤ Planner</button>
+<button onclick="showPage('games',this)">✧ Mini Games</button>
+<button onclick="showPage('progress',this)">↗ Progress</button>
+<button onclick="showPage('settings',this)">⚙ Settings</button>
+</nav>
+
+<div class="sidebar-bottom">
+MIND//OS v1.0<br>
+A system for better days.<br>
+<br>
+KNOWN • HIDDEN • OURS
+</div>
+
+</aside>
+
+<!-- MAIN -->
+
+<main class="main">
+
+<header class="topbar">
+<div>
+<h2 id="pageTitle">Dashboard</h2>
+<p id="pageSubtitle">Your mind. Your system. Your progress.</p>
+</div>
+<div class="clock" id="clock"></div>
+</header>
+
+<!-- DASHBOARD -->
+
+<section id="dashboard" class="section active">
+
+<div class="grid">
+
+<div class="card span-3">
+<h3>⚡ Total XP</h3>
+<div class="stat" id="xpStat">0</div>
+<div class="stat-label">Experience points</div>
+</div>
+
+<div class="card span-3">
+<h3>◇ Quests</h3>
+<div class="stat" id="questStat">0/0</div>
+<div class="stat-label">Tasks completed today</div>
+</div>
+
+<div class="card span-3">
+<h3>⌁ Habits</h3>
+<div class="stat" id="habitStat">0</div>
+<div class="stat-label">Habits completed today</div>
+</div>
+
+<div class="card span-3">
+<h3>◷ Focus</h3>
+<div class="stat" id="focusStat">0</div>
+<div class="stat-label">Focus minutes today</div>
+</div>
+
+<div class="card span-8">
+<h3>Today's Mission</h3>
+<p>Small actions. Consistent progress.</p>
+<div class="progress">
+<div class="progress-fill" id="dailyProgress"></div>
+</div>
+<p id="progressText">0% completed</p>
+<br>
+<button class="btn btn-primary" onclick="showPage('quests')">View Quests →</button>
+</div>
+
+<div class="card span-4">
+<h3>Today's Mood</h3>
+<div class="moods">
+<button class="mood" onclick="setMood('😔',this)">😔</button>
+<button class="mood" onclick="setMood('😐',this)">😐</button>
+<button class="mood" onclick="setMood('🙂',this)">🙂</button>
+<button class="mood" onclick="setMood('😄',this)">😄</button>
+<button class="mood" onclick="setMood('⚡',this)">⚡</button>
+</div>
+<br>
+<p id="moodText">How are you feeling today?</p>
+</div>
+
+<div class="card span-6">
+<h3>Today's Quests</h3>
+<div id="dashboardTasks"></div>
+</div>
+
+<div class="card span-6">
+<h3>Brain Vault</h3>
+<p>Your thoughts, saved in one place.</p>
+<div id="dashboardNotes"></div>
+<br>
+<button class="btn" onclick="showPage('vault')">Open Vault →</button>
+</div>
+
+<div class="card span-12">
+<h3>Daily Directive</h3>
+<p id="directive">
+You don't need to become someone else.
+You need to build a system that supports who you are.
+</p>
+<br>
+<button class="btn" onclick="newDirective()">↻ New Directive</button>
+</div>
+
+</div>
+</section>
+
+<!-- FOCUS -->
+
+<section id="focus" class="section">
+
+<div class="grid">
+
+<div class="card span-8">
+<h3>Focus Room</h3>
+<p>One task. One moment. No distractions.</p>
+
+<div class="timer" id="timer">25:00</div>
+<div class="timer-mode" id="timerMode">FOCUS SESSION</div>
+
+<br>
+
+<div class="timer-controls">
+<button class="btn btn-primary" onclick="timerStart()">Start</button>
+<button class="btn" onclick="timerPause()">Pause</button>
+<button class="btn" onclick="timerReset()">Reset</button>
+</div>
+
+<br>
+
+<div class="row">
+<button class="btn" onclick="setTimer(25,'Focus')">25 min</button>
+<button class="btn" onclick="setTimer(15,'Focus')">15 min</button>
+<button class="btn" onclick="setTimer(5,'Break')">5 min break</button>
+</div>
+
+</div>
+
+<div class="card span-4">
+<h3>Focus Statistics</h3>
+<div class="stat" id="focusToday">0</div>
+<div class="stat-label">Minutes focused today</div>
+<div class="divider"></div>
+<p>Completed sessions add XP to your system.</p>
+</div>
+
+<div class="card span-12">
+<h3>Focus Rules</h3>
+<p>01 — Choose one task.</p>
+<p>02 — Remove unnecessary distractions.</p>
+<p>03 — Focus until the timer ends.</p>
+<p>04 — Take a proper break.</p>
+</div>
+
+</div>
+</section>
+
+<!-- QUESTS -->
+
+<section id="quests" class="section">
+
+<div class="grid">
+
+<div class="card span-8">
+<h3>Daily Quests</h3>
+<div id="taskList"></div>
+</div>
+
+<div class="card span-4">
+<h3>Create Quest</h3>
+
+<input class="input" id="taskInput" placeholder="Enter a task...">
+
+<select class="input" id="taskPriority">
+<option value="Normal">Normal</option>
+<option value="Important">Important</option>
+<option value="Critical">Critical</option>
+</select>
+
+<button class="btn btn-primary" onclick="addTask()">+ Add Quest</button>
+
+<div class="divider"></div>
+
+<p>Completed quests give you XP.</p>
+</div>
+
+</div>
+</section>
+
+<!-- VAULT -->
+
+<section id="vault" class="section">
+
+<div class="grid">
+
+<div class="card span-4">
+<h3>New Memory</h3>
+
+<input class="input" id="noteTitle" placeholder="Title">
+
+<textarea class="input" id="noteText" placeholder="Write your thoughts..."></textarea>
+
+<button class="btn btn-primary" onclick="addNote()">Save Memory</button>
+</div>
+
+<div class="card span-8">
+<h3>Brain Vault</h3>
+<div id="noteList"></div>
+</div>
+
+</div>
+</section>
+
+<!-- HABITS -->
+
+<section id="habits" class="section">
+
+<div class="grid">
+
+<div class="card span-8">
+<h3>Habit Tracker</h3>
+<div id="habitList"></div>
+</div>
+
+<div class="card span-4">
+<h3>Create Habit</h3>
+<input class="input" id="habitInput" placeholder="e.g. Read 20 minutes">
+<button class="btn btn-primary" onclick="addHabit()">+ Add Habit</button>
+<br><br>
+<p>Build consistency, not perfection.</p>
+</div>
+
+</div>
+</section>
+
+<!-- PLANNER -->
+
+<section id="planner" class="section">
+
+<div class="grid">
+
+<div class="card span-4">
+<h3>Planner Entry</h3>
+
+<input class="input" id="planDate" type="date">
+<input class="input" id="planTitle" placeholder="Plan title">
+<textarea class="input" id="planDetails" placeholder="Details..."></textarea>
+
+<button class="btn btn-primary" onclick="addPlan()">Save Plan</button>
+</div>
+
+<div class="card span-8">
+<h3>My Planner</h3>
+<div id="planList"></div>
+</div>
+
+</div>
+</section>
+
+<!-- GAMES -->
+
+<section id="games" class="section">
+
+<div class="grid">
+
+<div class="card span-6">
+<h3>⚡ Reaction Test</h3>
+<p>Click when the screen turns green.</p>
+
+<div class="game-box" id="reactionBox">
+<div id="reactionMessage">Press Start</div>
+<br>
+<button class="btn btn-primary" onclick="reactionStart()">Start</button>
+</div>
+
+<div class="small" id="reactionResult"></div>
+</div>
+
+<div class="card span-6">
+<h3>🧠 Memory Sequence</h3>
+<p>Remember the sequence of numbers.</p>
+
+<div class="game-box">
+<div class="game-number" id="memoryNumber">—</div>
+<div id="memoryStatus">Ready?</div>
+<br>
+<button class="btn btn-primary" onclick="memoryStart()">Start Game</button>
+</div>
+</div>
+
+<div class="card span-6">
+<h3>🔢 Math Challenge</h3>
+
+<div class="game-box">
+<div class="game-number" id="mathQuestion">Press Start</div>
+<input class="input" id="mathAnswer" type="number" placeholder="Your answer">
+<button class="btn btn-primary" onclick="mathCheck()">Submit</button>
+<button class="btn" onclick="mathStart()">New Question</button>
+<div id="mathResult"></div>
+</div>
+</div>
+
+<div class="card span-6">
+<h3>❓ Knowledge Quiz</h3>
+
+<div class="game-box">
+<div id="quizQuestion">Press Start Quiz</div>
+<div id="quizOptions"></div>
+<button class="btn btn-primary" onclick="quizStart()">Start Quiz</button>
+<div id="quizResult"></div>
+</div>
+</div>
+
+<div class="card span-12">
+<h3>🎯 Number Guess</h3>
+<p>Guess a number from 1 to 20.</p>
+
+<div class="game-box">
+<input class="input" id="guessInput" type="number" min="1" max="20">
+<button class="btn btn-primary" onclick="guessCheck()">Guess</button>
+<button class="btn" onclick="guessStart()">Reset</button>
+<div id="guessResult"></div>
+</div>
+</div>
+
+</div>
+</section>
+
+<!-- PROGRESS -->
+
+<section id="progress" class="section">
+
+<div class="grid">
+
+<div class="card span-4">
+<h3>Level</h3>
+<div class="stat" id="levelStat">1</div>
+<p id="levelText">Begin your journey.</p>
+</div>
+
+<div class="card span-4">
+<h3>Total XP</h3>
+<div class="stat" id="progressXP">0</div>
+</div>
+
+<div class="card span-4">
+<h3>Completed Tasks</h3>
+<div class="stat" id="completedStat">0</div>
+</div>
+
+<div class="card span-12">
+<h3>Level Progress</h3>
+<div class="progress">
+<div class="progress-fill" id="levelProgress"></div>
+</div>
+<p id="levelProgressText">0 / 100 XP</p>
+</div>
+
+</div>
+</section>
+
+<!-- SETTINGS -->
+
+<section id="settings" class="section">
+
+<div class="grid">
+
+<div class="card span-6">
+<h3>System Settings</h3>
+<p>Manage your data.</p>
+
+<br>
+
+<button class="btn" onclick="exportData()">Export Backup</button>
+
+<br><br>
+
+<label class="small">Import Backup</label>
+<input class="input" type="file" id="importFile" accept=".json">
+
+<button class="btn" onclick="importData()">Import Data</button>
+
+<div class="divider"></div>
+
+<button class="btn btn-danger" onclick="resetData()">Reset All Data</button>
+</div>
+
+<div class="card span-6">
+<h3>About MIND//OS</h3>
+
+<p>
+A personal productivity system designed
+to help you organize thoughts, build habits,
+focus on tasks and track progress.
+</p>
+
+<br>
+
+<p>Version 1.0</p>
+<p>From Lumo to Deep.</p>
+
+<br>
+
+<p>KNOWN • HIDDEN • OURS</p>
+</div>
+
+</div>
+</section>
+
+</main>
+</div>
+
+<!-- MOBILE NAV -->
+
+<nav class="mobile-nav">
+<button class="active" onclick="showPage('dashboard',this)">
+<span>◈</span>Home
+</button>
+
+<button onclick="showPage('focus',this)">
+<span>◷</span>Focus
+</button>
+
+<button onclick="showPage('quests',this)">
+<span>◇</span>Quests
+</button>
+
+<button onclick="showPage('vault',this)">
+<span>▣</span>Vault
+</button>
+
+<button onclick="showPage('games',this)">
+<span>✧</span>Games
+</button>
+</nav>
+
+<script>
+
+/* =========================
+   DATA SYSTEM
+========================= */
+
+const STORAGE_KEY = "MIND_OS_LUMO_DEEP";
+
+let data = {
+  xp:0,
+  tasks:[],
+  notes:[],
+  habits:[],
+  plans:[],
+  moods:[],
+  focusMinutes:0,
+  completedTasks:0,
+  directive:"",
+  lastDate:"",
+  habitHistory:{}
+};
+
+function loadData() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+
+    if(saved) {
+      data = {...data,...JSON.parse(saved)};
+    }
+  } catch(error) {
+    console.log("Data loading error:",error);
+  }
+}
+
+function saveData() {
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
+  renderAll();
+}
+
+function today() {
+  return new Date().toISOString().slice(0,10);
+}
+
+function resetDaily() {
+  if(data.lastDate !== today()) {
+    data.lastDate = today();
+
+    data.tasks.forEach(task => {
+      task.done = false;
+    });
+  }
+}
+
+function escapeHTML(text) {
+  return String(text)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+/* =========================
+   NAVIGATION
+========================= */
+
+const pageNames = {
+  dashboard:["Dashboard","Your mind. Your system. Your progress."],
+  focus:["Focus Room","One task. One moment."],
+  quests:["Daily Quests","Make progress, one task at a time."],
+  vault:["Brain Vault","Your thoughts belong here."],
+  habits:["Habit Tracker","Consistency builds systems."],
+  planner:["Planner","Organize your future."],
+  games:["Mini Games","Train your brain."],
+  progress:["Progress","Every step counts."],
+  settings:["Settings","Manage your system."]
+};
+
+function showPage(page,button) {
+  document.querySelectorAll(".section").forEach(section=>{
+    section.classList.remove("active");
+  });
+
+  const target = document.getElementById(page);
+
+  if(target) target.classList.add("active");
+
+  document.getElementById("pageTitle").textContent =
+    pageNames[page][0];
+
+  document.getElementById("pageSubtitle").textContent =
+    pageNames[page][1];
+
+  document.querySelectorAll(".nav button,.mobile-nav button")
+    .forEach(btn=>btn.classList.remove("active"));
+
+  if(button) button.classList.add("active");
+
+  document.querySelectorAll(
+    `.nav button[onclick*="${page}"],.mobile-nav button[onclick*="${page}"]`
+  ).forEach(btn=>btn.classList.add("active"));
+}
+
+/* =========================
+   TASKS
+========================= */
+
+function addTask() {
+  const input = document.getElementById("taskInput");
+  const priority = document.getElementById("taskPriority").value;
+
+  const text = input.value.trim();
+
+  if(!text) return;
+
+  data.tasks.push({
+    id:Date.now(),
+    text,
+    priority,
+    done:false,
+    date:today()
+  });
+
+  input.value="";
+  saveData();
+}
+
+function toggleTask(id) {
+  const task = data.tasks.find(t=>t.id===id);
+
+  if(!task) return;
+
+  task.done = !task.done;
+
+  if(task.done) {
+    data.xp += 10;
+    data.completedTasks++;
+  } else {
+    data.xp = Math.max(0,data.xp-10);
+    data.completedTasks = Math.max(0,data.completedTasks-1);
+  }
+
+  saveData();
+}
+
+function deleteTask(id) {
+  data.tasks = data.tasks.filter(t=>t.id!==id);
+  saveData();
+}
+
+function renderTasks() {
+  const list = document.getElementById("taskList");
+  const dashboard = document.getElementById("dashboardTasks");
+
+  const html = data.tasks.map(task=>`
+    <div class="item ${task.done?'done':''}">
+      <div class="item-text">
+        <input type="checkbox"
+          ${task.done?'checked':''}
+          onchange="toggleTask(${task.id})">
+
+        ${escapeHTML(task.text)}
+        <div class="small">${escapeHTML(task.priority)}</div>
+      </div>
+
+      <button class="btn btn-danger"
+        onclick="deleteTask(${task.id})">×</button>
+    </div>
+  `).join("");
+
+  list.innerHTML = html || '<div class="empty">No quests yet.</div>';
+
+  dashboard.innerHTML = data.tasks.slice(0,4).map(task=>`
+    <div class="item ${task.done?'done':''}">
+      <div class="item-text">
+        ${task.done?'✓':'○'} ${escapeHTML(task.text)}
+      </div>
+    </div>
+  `).join("") || '<div class="empty">Add your first quest.</div>';
+}
+
+/* =========================
+   BRAIN VAULT
+========================= */
+
+function addNote() {
+  const title = document.getElementById("noteTitle").value.trim();
+  const content = document.getElementById("noteText").value.trim();
+
+  if(!title && !content) return;
+
+  data.notes.unshift({
+    id:Date.now(),
+    title:title || "Untitled",
+    content,
+    date:new Date().toLocaleString()
+  });
+
+  document.getElementById("noteTitle").value="";
+  document.getElementById("noteText").value="";
+
+  saveData();
+}
+
+function deleteNote(id) {
+  data.notes = data.notes.filter(note=>note.id!==id);
+  saveData();
+}
+
+function renderNotes() {
+  const list = document.getElementById("noteList");
+  const dashboard = document.getElementById("dashboardNotes");
+
+  list.innerHTML = data.notes.map(note=>`
+    <div class="note">
+      <div class="note-title">${escapeHTML(note.title)}</div>
+      <div class="note-content">${escapeHTML(note.content)}</div>
+      <div class="small">${escapeHTML(note.date)}</div>
+      <br>
+      <button class="btn btn-danger"
+        onclick="deleteNote(${note.id})">Delete</button>
+    </div>
+  `).join("") || '<div class="empty">Vault is empty.</div>';
+
+  dashboard.innerHTML = data.notes.slice(0,2).map(note=>`
+    <div class="item">
+      <div class="item-text">
+        <strong>${escapeHTML(note.title)}</strong>
+        <div class="small">${escapeHTML(note.content.slice(0,60))}</div>
+      </div>
+    </div>
+  `).join("") || '<div class="empty">No saved memories.</div>';
+}
+
+/* =========================
+   HABITS
+========================= */
+
+function addHabit() {
+  const input = document.getElementById("habitInput");
+  const text = input.value.trim();
+
+  if(!text) return;
+
+  data.habits.push({
+    id:Date.now(),
+    text,
+    done:false
+  });
+
+  input.value="";
+  saveData();
+}
+
+function toggleHabit(id) {
+  const habit = data.habits.find(h=>h.id===id);
+
+  if(!habit) return;
+
+  habit.done = !habit.done;
+
+  if(habit.done) data.xp+=5;
+  else data.xp=Math.max(0,data.xp-5);
+
+  saveData();
+}
+
+function deleteHabit(id) {
+  data.habits=data.habits.filter(h=>h.id!==id);
+  saveData();
+}
+
+function renderHabits() {
+  const list = document.getElementById("habitList");
+
+  list.innerHTML = data.habits.map(habit=>`
+    <div class="item ${habit.done?'done':''}">
+      <div class="item-text">
+        <input type="checkbox"
+          ${habit.done?'checked':''}
+          onchange="toggleHabit(${habit.id})">
+        ${escapeHTML(habit.text)}
+      </div>
+
+      <button class="btn btn-danger"
+        onclick="deleteHabit(${habit.id})">×</button>
+    </div>
+  `).join("") || '<div class="empty">No habits created.</div>';
+}
+
+/* =========================
+   PLANNER
+========================= */
+
+function addPlan() {
+  const date = document.getElementById("planDate").value;
+  const title = document.getElementById("planTitle").value.trim();
+  const details = document.getElementById("planDetails").value.trim();
+
+  if(!title) return;
+
+  data.plans.push({
+    id:Date.now(),
+    date:date || today(),
+    title,
+    details
+  });
+
+  document.getElementById("planTitle").value="";
+  document.getElementById("planDetails").value="";
+
+  saveData();
+}
+
+function deletePlan(id) {
+  data.plans=data.plans.filter(plan=>plan.id!==id);
+  saveData();
+}
+
+function renderPlans() {
+  const list = document.getElementById("planList");
+
+  const sorted = [...data.plans].sort((a,b)=>a.date.localeCompare(b.date));
+
+  list.innerHTML = sorted.map(plan=>`
+    <div class="note">
+      <div class="note-title">${escapeHTML(plan.title)}</div>
+      <div class="small">${escapeHTML(plan.date)}</div>
+      <div class="note-content">${escapeHTML(plan.details)}</div>
+      <br>
+      <button class="btn btn-danger"
+        onclick="deletePlan(${plan.id})">Delete</button>
+    </div>
+  `).join("") || '<div class="empty">Nothing planned.</div>';
+}
+
+/* =========================
+   MOOD
+========================= */
+
+function setMood(mood,button) {
+  document.querySelectorAll(".mood")
+    .forEach(btn=>btn.classList.remove("selected"));
+
+  button.classList.add("selected");
+
+  data.moods.push({
+    mood,
+    date:today()
+  });
+
+  document.getElementById("moodText").textContent =
+    "Mood saved: "+mood;
+
+  saveData();
+}
+
+/* =========================
+   DIRECTIVE
+========================= */
+
+const directives = [
+  "You don't need to become someone else. Build a system that supports who you are.",
+  "Small progress is still progress.",
+  "Your future is built by what you repeat.",
+  "Focus on what you can control.",
+  "One task at a time.",
+  "You are allowed to begin again.",
+  "Consistency beats intensity.",
+  "Make today count, quietly.",
+  "The system works when you show up.",
+  "You do not have to do everything today."
+];
+
+function newDirective() {
+  data.directive =
+    directives[Math.floor(Math.random()*directives.length)];
+
+  saveData();
+}
+
+/* =========================
+   FOCUS TIMER
+========================= */
+
+let timerSeconds = 1500;
+let timerInterval = null;
+let timerRunning = false;
+let currentTimerMode = "Focus";
+
+function updateTimerDisplay() {
+  const minutes = Math.floor(timerSeconds/60);
+  const seconds = timerSeconds%60;
+
+  document.getElementById("timer").textContent =
+    String(minutes).padStart(2,"0")+":"+
+    String(seconds).padStart(2,"0");
+}
+
+function setTimer(minutes,mode) {
+  timerPause();
+
+  timerSeconds=minutes*60;
+  currentTimerMode=mode;
+
+  document.getElementById("timerMode").textContent =
+    mode.toUpperCase()+" SESSION";
+
+  updateTimerDisplay();
+}
+
+function timerStart() {
+  if(timerRunning) return;
+
+  timerRunning=true;
+
+  timerInterval=setInterval(()=>{
+    timerSeconds--;
+
+    updateTimerDisplay();
+
+    if(timerSeconds<=0) {
+      timerPause();
+
+      if(currentTimerMode==="Focus") {
+        data.focusMinutes+=25;
+        data.xp+=25;
+
+        alert("Focus session completed! +25 XP");
+      } else {
+        alert("Break completed!");
+      }
+
+      saveData();
+    }
+  },1000);
+}
+
+function timerPause() {
+  timerRunning=false;
+  clearInterval(timerInterval);
+}
+
+function timerReset() {
+  timerPause();
+  timerSeconds=1500;
+  currentTimerMode="Focus";
+
+  document.getElementById("timerMode").textContent="FOCUS SESSION";
+
+  updateTimerDisplay();
+}
+
+/* =========================
+   REACTION GAME
+========================= */
+
+let reactionState="idle";
+let reactionTimeout=null;
+let reactionStartTime=0;
+
+function reactionStart() {
+  const box=document.getElementById("reactionBox");
+  const message=document.getElementById("reactionMessage");
+
+  reactionState="waiting";
+
+  box.style.background="#493034";
+  message.textContent="Wait for green...";
+
+  document.getElementById("reactionResult").textContent="";
+
+  clearTimeout(reactionTimeout);
+
+  reactionTimeout=setTimeout(()=>{
+    reactionState="ready";
+    box.style.background="#244d38";
+    message.textContent="CLICK NOW!";
+    reactionStartTime=Date.now();
+  },Math.random()*4000+1500);
+
+  box.onclick=()=>{
+    if(reactionState==="waiting") {
+      message.textContent="Too early!";
+      reactionState="idle";
+      clearTimeout(reactionTimeout);
+      box.style.background="#493034";
+    }
+
+    else if(reactionState==="ready") {
+      const time=Date.now()-reactionStartTime;
+
+      message.textContent=time+" ms";
+
+      document.getElementById("reactionResult").textContent=
+        "Your reaction time: "+time+" milliseconds";
+
+      data.xp+=5;
+      reactionState="idle";
+      box.style.background="#111218";
+
+      saveData();
+    }
+  };
+}
+
+/* =========================
+   MEMORY GAME
+========================= */
+
+let memorySequence=[];
+let memoryIndex=0;
+let memoryActive=false;
+
+function memoryStart() {
+  memorySequence=[];
+  memoryIndex=0;
+  memoryActive=true;
+
+  memoryNext();
+}
+
+function memoryNext() {
+  memorySequence.push(Math.floor(Math.random()*9)+1);
+
+  document.getElementById("memoryNumber").textContent=
+    memorySequence.join(" ");
+
+  document.getElementById("memoryStatus").textContent=
+    "Remember the sequence";
+
+  setTimeout(()=>{
+    document.getElementById("memoryNumber").textContent="???";
+
+    const answer=prompt(
+      "Enter the sequence separated by spaces:"
+    );
+
+    if(answer===null) {
+      memoryActive=false;
+      return;
+    }
+
+    const userSequence=answer.trim().split(/\s+/).map(Number);
+
+    if(userSequence.join(",")===memorySequence.join(",")) {
+      memoryIndex++;
+
+      document.getElementById("memoryStatus").textContent=
+        "Correct! Level "+memoryIndex;
+
+      if(memoryIndex>=5) {
+        data.xp+=15;
+        saveData();
+
+        document.getElementById("memoryStatus").textContent=
+          "Excellent! +15 XP";
+
+        memoryActive=false;
+      } else {
+        setTimeout(memoryNext,1000);
+      }
+    } else {
+      document.getElementById("memoryStatus").textContent=
+        "Wrong sequence. Try again.";
+
+      memoryActive=false;
+    }
+  },1500);
+}
+
+/* =========================
+   MATH GAME
+========================= */
+
+let mathCorrect=0;
+
+function mathStart() {
+  const a=Math.floor(Math.random()*20)+1;
+  const b=Math.floor(Math.random()*20)+1;
+
+  mathCorrect=a+b;
+
+  document.getElementById("mathQuestion").textContent=
+    a+" + "+b+" = ?";
+
+  document.getElementById("mathAnswer").value="";
+  document.getElementById("mathResult").textContent="";
+}
+
+function mathCheck() {
+  const answer=Number(document.getElementById("mathAnswer").value);
+
+  if(answer===mathCorrect) {
+    document.getElementById("mathResult").textContent=
+      "Correct! +5 XP";
+
+    data.xp+=5;
+  } else {
+    document.getElementById("mathResult").textContent=
+      "Not quite. Try again!";
+  }
+
+  saveData();
+}
+
+/* =========================
+   QUIZ
+========================= */
+
+const quizQuestions=[
+  {
+    q:"Which planet is known as the Red Planet?",
+    options:["Earth","Mars","Venus","Jupiter"],
+    answer:1
+  },
+  {
+    q:"What is the largest ocean?",
+    options:["Atlantic","Indian","Pacific","Arctic"],
+    answer:2
+  },
+  {
+    q:"How many sides does a hexagon have?",
+    options:["Five","Six","Seven","Eight"],
+    answer:1
+  },
+  {
+    q:"Which gas do plants absorb?",
+    options:["Oxygen","Nitrogen","Carbon dioxide","Hydrogen"],
+    answer:2
+  },
+  {
+    q:"What is 12 × 8?",
+    options:["86","96","108","88"],
+    answer:1
+  }
+];
+
+let quizIndex=0;
+let quizScore=0;
+
+function quizStart() {
+  quizIndex=0;
+  quizScore=0;
+  quizShow();
+}
+
+function quizShow() {
+  if(quizIndex>=quizQuestions.length) {
+    document.getElementById("quizQuestion").textContent=
+      "Quiz completed! Score: "+quizScore+"/"+quizQuestions.length;
+
+    document.getElementById("quizOptions").innerHTML="";
+    document.getElementById("quizResult").textContent="";
+
+    data.xp+=quizScore*3;
+
+    saveData();
+    return;
+  }
+
+  const question=quizQuestions[quizIndex];
+
+  document.getElementById("quizQuestion").textContent=
+    (quizIndex+1)+". "+question.q;
+
+  document.getElementById("quizOptions").innerHTML=
+    question.options.map((option,index)=>`
+      <button class="quiz-option"
+        onclick="quizAnswer(${index})">
+        ${escapeHTML(option)}
+      </button>
+    `).join("");
+}
+
+function quizAnswer(index) {
+  if(index===quizQuestions[quizIndex].answer) {
+    quizScore++;
+  }
+
+  quizIndex++;
+  quizShow();
+}
+
+/* =========================
+   NUMBER GUESS
+========================= */
+
+let guessNumber=0;
+let guessAttempts=0;
+
+function guessStart() {
+  guessNumber=Math.floor(Math.random()*20)+1;
+  guessAttempts=0;
+
+  document.getElementById("guessInput").value="";
+  document.getElementById("guessResult").textContent=
+    "New number generated.";
+}
+
+function guessCheck() {
+  const guess=Number(document.getElementById("guessInput").value);
+
+  if(!guess || guess<1 || guess>20) {
+    document.getElementById("guessResult").textContent=
+      "Enter a number between 1 and 20.";
+
+    return;
+  }
+
+  guessAttempts++;
+
+  if(guess===guessNumber) {
+    document.getElementById("guessResult").textContent=
+      "Correct! Attempts: "+guessAttempts+" +5 XP";
+
+    data.xp+=5;
+    saveData();
+    guessStart();
+  }
+
+  else if(guess<guessNumber) {
+    document.getElementById("guessResult").textContent=
+      "Too low. Try again.";
+  }
+
+  else {
+    document.getElementById("guessResult").textContent=
+      "Too high. Try again.";
+  }
+}
+
+/* =========================
+   PROGRESS
+========================= */
+
+function renderProgress() {
+  const level=Math.floor(data.xp/100)+1;
+  const currentXP=data.xp%100;
+
+  document.getElementById("levelStat").textContent=level;
+  document.getElementById("levelText").textContent=
+    "Level "+level+" — Keep moving.";
+
+  document.getElementById("progressXP").textContent=data.xp;
+  document.getElementById("completedStat").textContent=
+    data.completedTasks;
+
+  document.getElementById("levelProgress").style.width=
+    currentXP+"%";
+
+  document.getElementById("levelProgressText").textContent=
+    currentXP+" / 100 XP";
+}
+
+/* =========================
+   DASHBOARD
+========================= */
+
+function renderDashboard() {
+  document.getElementById("xpStat").textContent=data.xp;
+
+  const completed=data.tasks.filter(t=>t.done).length;
+
+  document.getElementById("questStat").textContent=
+    completed+"/"+data.tasks.length;
+
+  const completedHabits=data.habits.filter(h=>h.done).length;
+
+  document.getElementById("habitStat").textContent=
+    completedHabits+"/"+data.habits.length;
+
+  document.getElementById("focusStat").textContent=
+    data.focusMinutes;
+
+  document.getElementById("focusToday").textContent=
+    data.focusMinutes;
+
+  const total=data.tasks.length;
+
+  const percentage=total
+    ? Math.round((completed/total)*100)
+    : 0;
+
+  document.getElementById("dailyProgress").style.width=
+    percentage+"%";
+
+  document.getElementById("progressText").textContent=
+    percentage+"% completed";
+
+  document.getElementById("directive").textContent=
+    data.directive || directives[0];
+}
+
+/* =========================
+   CLOCK
+========================= */
+
+function updateClock() {
+  const now=new Date();
+
+  document.getElementById("clock").textContent=
+    now.toLocaleDateString()+" · "+
+    now.toLocaleTimeString([],{
+      hour:"2-digit",
+      minute:"2-digit"
+    });
+}
+
+/* =========================
+   BACKUP
+========================= */
+
+function exportData() {
+  const blob=new Blob(
+    [JSON.stringify(data,null,2)],
+    {type:"application/json"}
+  );
+
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+
+  a.href=url;
+  a.download="MIND_OS_Backup.json";
+  a.click();
+
+  URL.revokeObjectURL(url);
+}
+
+function importData() {
+  const file=document.getElementById("importFile").files[0];
+
+  if(!file) {
+    alert("Select a backup file first.");
+    return;
+  }
+
+  const reader=new FileReader();
+
+  reader.onload=function(event) {
+    try {
+      data={...data,...JSON.parse(event.target.result)};
+      saveData();
+
+      alert("Backup imported successfully!");
+    } catch(error) {
+      alert("Invalid backup file.");
+    }
+  };
+
+  reader.readAsText(file);
+}
+
+function resetData() {
+  if(!confirm("Are you sure you want to reset ALL data?")) return;
+
+  localStorage.removeItem(STORAGE_KEY);
+
+  location.reload();
+}
+
+/* =========================
+   RENDER
+========================= */
+
+function renderAll() {
+  renderTasks();
+  renderNotes();
+  renderHabits();
+  renderPlans();
+  renderDashboard();
+  renderProgress();
+}
+
+loadData();
+resetDaily();
+renderAll();
+updateClock();
+updateTimerDisplay();
+
+setInterval(updateClock,1000);
+
+/* =========================
+   END OF MIND//OS
+========================= */
+
+</script>
+
+</body>
+</html>
+ 
